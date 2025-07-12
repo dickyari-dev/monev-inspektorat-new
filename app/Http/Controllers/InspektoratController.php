@@ -9,7 +9,9 @@ use App\Models\JenisLaporan;
 use App\Models\KategoriLaporan;
 use App\Models\Kecamatan;
 use App\Models\StrukturDesa;
+use App\Models\StrukturInspektorat;
 use App\Models\StrukturKecamatan;
+use App\Models\WaktuMonev;
 use Illuminate\Http\Request;
 
 class InspektoratController extends Controller
@@ -21,8 +23,9 @@ class InspektoratController extends Controller
 
     public function strukturInspektorat()
     {
-        $struktur = [];
-        return view('inspektorat.struktur-inspektorat', compact('struktur'));
+        $struktur = StrukturInspektorat::where('status', 'active')->get();
+        $jenisJabatan = JenisJabatan::where('status', 'active')->get();
+        return view('inspektorat.struktur-inspektorat', compact('struktur', 'jenisJabatan'));
     }
 
     public function strukturKecamatan()
@@ -67,10 +70,16 @@ class InspektoratController extends Controller
 
     public function waktuMonev()
     {
-        return view('inspektorat.waktu-monev');
+        $kategori = KategoriLaporan::where('status', 'active')->get();
+        $waktu_monev = WaktuMonev::where('status', 'active')->get();
+        return view('inspektorat.waktu-monev', compact('kategori', 'waktu_monev'));
     }
+
     public function jadwalMonev()
     {
-        return view('inspektorat.jadwal-monev');
+        $kecamatan = Kecamatan::where('status', 'active')->get();
+        $waktu_monev = WaktuMonev::where('status', 'active')->get();
+
+        return view('inspektorat.jadwal-monev', compact('kecamatan', 'waktu_monev'));
     }
 }

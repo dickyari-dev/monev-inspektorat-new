@@ -7,6 +7,7 @@ use App\Models\JenisJabatan;
 use App\Models\Kecamatan;
 use App\Models\StrukturDesa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StrukturDesaController extends Controller
@@ -51,11 +52,15 @@ class StrukturDesaController extends Controller
 
     public function edit($id)
     {
-        $item = StrukturDesa::findOrFail($id);
+        $data = StrukturDesa::findOrFail($id);
         $desa = Desa::all();
         $kecamatan = Kecamatan::all();
-        $jabatans = JenisJabatan::all();
-        return view('struktur_desa.edit', compact('item', 'desa', 'kecamatan', 'jabatans'));
+        $jenisJabatan = JenisJabatan::all();
+        if (Auth::user()->role == 'kecamatan') {
+            return view('kecamatan.struktur-desa-edit', compact('data', 'desa', 'kecamatan', 'jenisJabatan'));
+        } elseif (Auth::user()->role == 'inspektorat') {
+            return view('inspektorat.struktur-desa-edit', compact('data', 'desa', 'kecamatan', 'jenisJabatan'));
+        }
     }
 
     public function update(Request $request, $id)
@@ -84,7 +89,7 @@ class StrukturDesaController extends Controller
         }
 
         $data->update($validated);
-        return redirect()->route('struktur-desa.index')->with('success', 'Data berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Data berhasil diperbarui.');
     }
 
     public function destroy($id)
@@ -95,7 +100,7 @@ class StrukturDesaController extends Controller
         }
         $data->status = 'non-active';
         $data->save();
-        return redirect()->route('struktur-desa.index')->with('success', 'Data berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 
     public function getByKecamatan($id)

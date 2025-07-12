@@ -6,6 +6,7 @@ use App\Models\JenisJabatan;
 use App\Models\Kecamatan;
 use App\Models\StrukturKecamatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StrukturKecamatanController extends Controller
@@ -57,7 +58,13 @@ class StrukturKecamatanController extends Controller
         $item = StrukturKecamatan::findOrFail($id);
         $kecamatan = Kecamatan::where('status', 'active')->get();
         $jenisJabatan = JenisJabatan::where('status', 'active')->get();
-        return view('inspektorat.struktur-kecamatan-edit', compact('item','kecamatan', 'jenisJabatan'));
+        if (Auth::user()->role == 'kecamatan') {
+            return view('kecamatan.struktur-kecamatan-edit', compact('item','kecamatan', 'jenisJabatan'));
+        } elseif(Auth::user()->role == 'desa') {
+            return view('desa.struktur-kecamatan-edit', compact('item','kecamatan', 'jenisJabatan'));
+        } else {
+            return view('inspektorat.struktur-kecamatan-edit', compact('item','kecamatan', 'jenisJabatan'));
+        }
     }
 
     public function update(Request $request, $id)

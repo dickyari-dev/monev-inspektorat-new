@@ -59,4 +59,16 @@ class JenisLaporanController extends Controller
 
         return back()->with('success', 'Jenis laporan berhasil dihapus.');
     }
+
+    public function getByKategori($kategoriId)
+    {
+        $jenis = JenisLaporan::where('kategori_id', $kategoriId)
+            ->where('status', 'active')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $jenis
+        ]);
+    }
 }

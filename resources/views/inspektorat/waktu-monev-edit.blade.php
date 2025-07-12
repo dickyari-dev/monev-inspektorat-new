@@ -18,140 +18,90 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('waktu-monev.store') }}" method="POST" enctype="multipart/form-data }}">
+            <form action="{{ route('waktu-monev.update', $data->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
+
                 <div class="row">
                     <div class="col-md-12">
                         <table class="table table-borderless">
                             <tr>
-                                <td>
-                                    <label for="tahun">Tahun :</label>
-                                </td>
+                                <td><label for="tahun">Tahun :</label></td>
                                 <td>
                                     <input type="number" name="tahun" id="tahun" class="form-control" required
-                                        value="{{ date('Y') }}" readonly>
+                                        value="{{ old('tahun', $data->tahun) }}" readonly>
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    <label for="bulan">Bulan :</label>
-                                </td>
+                                <td><label for="bulan">Bulan :</label></td>
                                 <td>
                                     <select name="bulan" id="bulan" class="form-control" required>
                                         <option value="">-- Pilih Bulan --</option>
-                                        <option value="1">Januari</option>
-                                        <option value="2">Februari</option>
-                                        <option value="3">Maret</option>
-                                        <option value="4">April</option>
-                                        <option value="5">Mei</option>
-                                        <option value="6">Juni</option>
-                                        <option value="7">Juli</option>
-                                        <option value="8">Agustus</option>
-                                        <option value="9">September</option>
-                                        <option value="10">Oktober</option>
-                                        <option value="11">November</option>
-                                        <option value="12">Desember</option>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for="id_kategori_laporan">Kategori Laporan :</label>
-                                </td>
-                                <td>
-                                    <select name="id_kategori_laporan" id="id_kategori_laporan" class="form-control"
-                                        required onchange="getKategori(this.value)">
-                                        <option value="">-- Pilih Kategori --</option>
-                                        @foreach ($kategori as $item)
-                                        <option value="{{ $item->id }}">{{ $item->nama_kategori_laporan }}</option>
+                                        @foreach(range(1, 12) as $bln)
+                                        <option value="{{ $bln }}" {{ $bln==old('bulan', $data->bulan) ? 'selected' : ''
+                                            }}>
+                                            {{ DateTime::createFromFormat('!m', $bln)->format('F') }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </td>
                             </tr>
                             <tr>
+                                <td><label for="id_kategori_laporan">Kategori Laporan :</label></td>
                                 <td>
-                                    <label for="id_jenis_laporan">Jenis Laporan :</label>
-                                </td>
-                                <td>
-                                    <select name="id_jenis_laporan" id="id_jenis_laporan" class="form-control" required>
-                                        <option value="">-- Pilih Jenis --</option>
+                                    <select name="id_kategori_laporan" id="id_kategori_laporan" class="form-control"
+                                        required onchange="getKategori(this.value)">
+                                        <option value="">-- Pilih Kategori --</option>
+                                        @foreach ($kategori as $item)
+                                        <option value="{{ $item->id }}" {{ $item->id == old('id_kategori_laporan',
+                                            $data->id_kategori_laporan) ? 'selected' : '' }}>
+                                            {{ $item->nama_kategori_laporan }}
+                                        </option>
+                                        @endforeach
                                     </select>
                                 </td>
                             </tr>
                             <tr>
+                                <td><label for="id_jenis_laporan">Jenis Laporan :</label></td>
                                 <td>
-                                    <label for="jabatan">Tanggal :</label>
+                                    <select name="id_jenis_laporan" id="id_jenis_laporan" class="form-control" required>
+                                        <option value="{{ $data->jenis->id ?? '' }}" selected>
+                                            {{ $data->jenis->nama_jenis_laporan ?? '-- Pilih Jenis --' }}
+                                        </option>
+                                    </select>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td><label for="tanggal_awal">Tanggal :</label></td>
                                 <td>
                                     <div class="form-group">
                                         <label for="tanggal_awal">Tanggal Awal</label>
                                         <input type="date" name="tanggal_awal" id="tanggal_awal" required
-                                            class="form-control">
+                                            value="{{ old('tanggal_awal', $data->tanggal_awal) }}" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <label for="tanggal_akhir">Tanggal Awal</label>
+                                        <label for="tanggal_akhir">Tanggal Akhir</label>
                                         <input type="date" name="tanggal_akhir" id="tanggal_akhir" required
+                                            value="{{ old('tanggal_akhir', $data->tanggal_akhir) }}"
                                             class="form-control">
                                     </div>
                                 </td>
                             </tr>
                         </table>
                     </div>
-                    <div class="col-12 d-flex justify-content-center align-items-center">
+
+                    <div class="col-12 d-flex justify-content-center">
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </div>
+
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="card">
-        <div class="card-header">
-            <h2>Struktur Desa</h2>
-        </div>
-        <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Tahun</th>
-                        <th>Jenis Laporan</th>
-                        <th>Tanggal Awal</th>
-                        <th>Tanggal Akhir</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($waktu_monev as $item)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->tahun }}</td>
-                        <td>{{ $item->kategori->nama_kategori_laporan }} - {{ $item->jenis->nama_jenis_laporan }}</td>
-                        <td>{{ $item->tanggal_awal }}</td>
-                        <td>{{ $item->tanggal_akhir }}</td>
-                        <td>
-                            @if ($item->status == 'active')
-                            <span class="text-success">Aktif</span>
-                            @else
-                            <span class="text-danger">Tidak Aktif</span>
-                            @endif
-                        </td>
-                        <td>
-                            <a href="{{ route('waktu-monev.edit', $item->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                            <a href="{{ route('waktu-monev.destroy', $item->id) }}" class="btn btn-sm btn-danger">Hapus</a>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('scripts')

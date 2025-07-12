@@ -211,12 +211,12 @@
                                     </a>
                                     <ul class="sidebar-submenu collapse" id="pages_menu">
                                         <li class="sidebar-menu-item">
-                                            <a class="sidebar-menu-button" href="#">
+                                            <a class="sidebar-menu-button" href="{{ route('inspektorat.waktu-monev') }}">
                                                 <span class="sidebar-menu-text">Waktu Monev</span>
                                             </a>
                                         </li>
                                         <li class="sidebar-menu-item">
-                                            <a class="sidebar-menu-button" href="#">
+                                            <a class="sidebar-menu-button" href="{{ route('inspektorat.jadwal-monev') }}">
                                                 <span class="sidebar-menu-text">Jadwal Monev</span>
                                             </a>
                                         </li>
@@ -230,7 +230,7 @@
                                         <span class="ml-auto sidebar-menu-toggle-icon"></span>
                                     </a>
                                     <ul class="sidebar-submenu collapse" id="layouts_menu">
-                                        <li class="sidebar-menu-item active">
+                                        <li class="sidebar-menu-item">
                                             <a class="sidebar-menu-button" href="#">
                                                 <span class="sidebar-menu-text">Laporan Monev Desa</span>
                                             </a>
@@ -263,17 +263,17 @@
                                     </a>
                                     <ul class="sidebar-submenu collapse show " id="dashboards_menu">
                                         <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="index.html">
+                                            <a class="sidebar-menu-button" href="{{ route('kecamatan.struktur-kecamatan') }}">
                                                 <span class="sidebar-menu-text">Struktur Kecamatan</span>
                                             </a>
                                         </li>
                                         <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="index.html">
+                                            <a class="sidebar-menu-button" href="{{ route('kecamatan.struktur-desa') }}">
                                                 <span class="sidebar-menu-text">Struktur Desa</span>
                                             </a>
                                         </li>
                                         <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="index.html">
+                                            <a class="sidebar-menu-button" href="#">
                                                 <span class="sidebar-menu-text">Data Petugas</span>
                                             </a>
                                         </li>

@@ -18,7 +18,7 @@
 <div class="container">
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('inspektorat.struktur-inspektorat.store') }}" method="POST" enctype="multipart/form-data }}">
+            <form action="{{ route('inspektorat.struktur-inspektorat.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <table class="table table-borderless">
                     <tr>
@@ -39,10 +39,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="alamat_lengkap">Alamat Lengkap :</label>
+                            <label for="alamat">Alamat Lengkap :</label>
                         </td>
                         <td>
-                            <textarea name="alamat_lengkap" id="alamat_lengkap" cols="30" rows="3"
+                            <textarea name="alamat" id="alamat" cols="30" rows="3"
                                 class="form-control"></textarea>
                         </td>
                     </tr>
@@ -56,10 +56,15 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="jabatan">Jabatan :</label>
+                            <label for="id_jabatan">Jabatan :</label>
                         </td>
                         <td>
-                            <input type="jabatan" name="jabatan" id="jabatan" class="form-control" required>
+                           <select name="id_jabatan" id="id_jabatan" class="form-control" required>
+                               <option value="">-- Pilih Jabatan --</option>
+                               @foreach ($jenisJabatan as $jab)
+                               <option value="{{ $jab->id }}">{{ $jab->nama_jabatan }}</option>
+                               @endforeach
+                           </select>
                         </td>
                     </tr>
                     <tr>
@@ -79,10 +84,10 @@
                     </tr>
                     <tr>
                         <td>
-                            <label for="photo">Photo :</label>
+                            <label for="foto">Photo :</label>
                         </td>
                         <td>
-                            <input type="file" name="photo" id="photo" class="form-control" required>
+                            <input type="file" name="foto" id="foto" class="form-control" required>
                         </td>
                     </tr>
                     <tr>
@@ -109,15 +114,28 @@
                     <th>Jabatan</th>
                     <th>Tahun Menjabat</th>
                     <th>Alamat Lengkap</th>
+                    <th>Aksi</th>
                 </tr>
                 @foreach ($struktur as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                     <td>
+                        <img src="{{ asset('storage/' . $item->foto) }}" alt=""
+                            style="width: 100px; height: 100px; object-fit: cover">
+                    </td>
                     <td>{{ $item->nama_pegawai }}</td>
                     <td>{{ $item->nip }}</td>
-                    <td>{{ $item->jabatan }}</td>
-                    <td>{{ $item->tahun_awal }} - {{ $item->tahun_akhir }}</td>
-                    <td>{{ $item->alamat_lengkap }}</td>
+                    <td>{{ $item->jabatan->nama_jabatan }}</td>
+                   <td>
+                        {{ $item->tahun_awal ? \Carbon\Carbon::parse($item->tahun_awal)->format('Y') : '?' }}
+                        -
+                        {{ $item->tahun_akhir ? \Carbon\Carbon::parse($item->tahun_akhir)->format('Y') : '?' }}
+                    </td>
+                    <td>{{ $item->alamat }}</td>
+                     <td>
+                        <a href="#" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
                 @endforeach
             </table>

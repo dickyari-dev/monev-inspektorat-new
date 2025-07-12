@@ -10,9 +10,12 @@ use App\Http\Controllers\KategoriLaporanController;
 use App\Http\Controllers\KecamatanController;
 use App\Http\Controllers\KecamatanDataController;
 use App\Http\Controllers\StrukturDesaController;
+use App\Http\Controllers\StrukturInspektoratController;
 use App\Http\Controllers\StrukturKecamatanController;
+use App\Http\Controllers\WaktuMonevController;
 use App\Models\StrukturDesa;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -37,7 +40,7 @@ Route::group(['middleware' => ['auth.check:inspektorat']], function () {
     Route::get('/inspektorat/dashboard', [InspektoratController::class, 'dashboard'])->name('inspektorat.dashboard');
 
     Route::get('/inspektorat/struktur-inspektorat', [InspektoratController::class, 'strukturInspektorat'])->name('inspektorat.struktur-inspektorat');
-    Route::post('/inspektorat/struktur-inspektorat/store', [InspektoratController::class, 'strukturInspektoratStore'])->name('inspektorat.struktur-inspektorat.store');
+    Route::post('/inspektorat/struktur-inspektorat/store', [StrukturInspektoratController::class, 'store'])->name('inspektorat.struktur-inspektorat.store');
 
 
     Route::get('/inspektorat/struktur-kecamatan', [InspektoratController::class, 'strukturKecamatan'])->name('inspektorat.struktur-kecamatan');
@@ -67,7 +70,6 @@ Route::group(['middleware' => ['auth.check:inspektorat']], function () {
     Route::get('/inspektorat/setting-wilayah', [InspektoratController::class, 'settingWilayah'])->name('inspektorat.setting-wilayah');
     Route::post('/inspektorat/setting-wilayah/store', [InspektoratController::class, 'settingWilayahPost'])->name('inspektorat.setting-wilayah.store');
 
-    Route::get('/inspektorat/waktu-monev', [InspektoratController::class, 'waktuMonev'])->name('inspektorat.waktu-monev');
 
     Route::get('/inspektorat/jadwal-monev', [InspektoratController::class, 'jadwalMonev'])->name('inspektorat.jadwal-monev');
 
@@ -99,9 +101,34 @@ Route::group(['middleware' => ['auth.check:inspektorat']], function () {
     Route::get('/jenis-dokumen/{id}/edit', [JenisDokumenController::class, 'edit'])->name('jenis-dokumen.edit');
     Route::put('/jenis-dokumen/update/{id}', [JenisDokumenController::class, 'update'])->name('jenis-dokumen.update');
     Route::delete('/jenis-dokumen/{id}', [JenisDokumenController::class, 'destroy'])->name('jenis-dokumen.destroy');
+
+    // Waktu Monev
+    Route::get('/inspektorat/waktu-monev', [InspektoratController::class, 'waktuMonev'])->name('inspektorat.waktu-monev');
+    Route::post('/waktu-monev/store', [WaktuMonevController::class, 'store'])->name('waktu-monev.store');
+    Route::post('/waktu-monev/filter', [WaktuMonevController::class, 'filter'])->name('waktu-monev.filter');
+    Route::get('/waktu-monev/{id}/edit', [WaktuMonevController::class, 'edit'])->name('waktu-monev.edit');
+    Route::put('/waktu-monev/update/{id}', [WaktuMonevController::class, 'update'])->name('waktu-monev.update');
+    Route::get('/waktu-monev/{id}', [WaktuMonevController::class, 'destroy'])->name('waktu-monev.destroy');
 });
 Route::group(['middleware' => ['auth.check:kecamatan']], function () {
     Route::get('/kecamatan/dashboard', [KecamatanController::class, 'dashboard'])->name('kecamatan.dashboard');
+
+    Route::get('/kecamatan/struktur-kecamatan', [KecamatanController::class, 'strukturKecamatan'])->name('kecamatan.struktur-kecamatan');
+    Route::post('/struktur-kecamatan/store', [StrukturKecamatanController::class, 'store'])->name('struktur-kecamatan.store');
+    Route::get('/struktur-kecamatan/edit/{id}', [StrukturKecamatanController::class, 'edit'])->name('struktur-kecamatan.edit');
+    Route::put('/struktur-kecamatan/update/{id}', [StrukturKecamatanController::class, 'update'])->name('struktur-kecamatan.update');
+    Route::get('/struktur-kecamatan/delete/{id}', [StrukturKecamatanController::class, 'store'])->name('struktur-kecamatan.destroy');
+
+    Route::post('/desa/store', [DesaDataController::class, 'store'])->name('desa.store');
+    Route::get('/desa/edit/{id}', [DesaDataController::class, 'edit'])->name('desa.edit');
+    Route::put('/desa/update/{id}', [DesaDataController::class, 'update'])->name('desa.update');
+    Route::get('/desa/delete/{id}', [DesaDataController::class, 'destroy'])->name('desa.destroy');
+    
+    Route::get('/kecamatan/struktur-desa', [KecamatanController::class, 'strukturDesa'])->name('kecamatan.struktur-desa');
+    Route::post('/struktur-desa/store', [StrukturDesaController::class, 'store'])->name('struktur-desa.store');
+    Route::get('/struktur-desa/edit/{id}', [StrukturDesaController::class, 'edit'])->name('struktur-desa.edit');
+    Route::put('/struktur-desa/update/{id}', [StrukturDesaController::class, 'update'])->name('struktur-desa.update');
+    Route::get('/struktur-desa/delete/{id}', [StrukturDesaController::class, 'store'])->name('struktur-desa.destroy');
 });
 Route::group(['middleware' => ['auth.check:desa']], function () {
     Route::get('/desa/dashboard', [DesaController::class, 'dashboard'])->name('desa.dashboard');
