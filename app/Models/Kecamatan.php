@@ -12,6 +12,7 @@ class Kecamatan extends Model
     protected $table = 'kecamatan';
 
     protected $fillable = [
+        'user_id',
         'kode_kecamatan',
         'nama_kecamatan',
         'nama_kabupaten',
@@ -20,4 +21,9 @@ class Kecamatan extends Model
         'telepon',
         'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

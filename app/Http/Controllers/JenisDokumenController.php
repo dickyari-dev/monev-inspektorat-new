@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Desa;
 use App\Models\JenisDokumen;
 use Illuminate\Http\Request;
 
@@ -59,5 +60,39 @@ class JenisDokumenController extends Controller
         $dokumen->save();
 
         return back()->with('success', 'Jenis dokumen berhasil dihapus.');
+    }
+
+    public function getDokumenById($id)
+    {
+        $dokumen = JenisDokumen::findOrFail($id);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $dokumen
+        ]);
+    }
+
+
+    public function getByDesa($desaId)
+    {
+        // Ambil dokumen berdasarkan desa
+        $dokumen = JenisDokumen::all();
+
+        // Ambil data desa
+        $desa = Desa::find($desaId);
+
+        if (!$desa) {
+            return response()->json([
+                'message' => 'Desa tidak ditemukan',
+                'data' => [],
+                'desa' => null
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Data berhasil diambil',
+            'data' => $dokumen,
+            'desa' => $desa
+        ]);
     }
 }

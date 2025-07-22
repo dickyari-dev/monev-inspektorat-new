@@ -29,8 +29,8 @@
                                     <select name="id_kecamatan" id="id_kecamatan" class="form-control" required
                                         onchange="getDesa(this.value)">
                                         <option value="">-- Pilih Kecamatan --</option>
-                                        @foreach ($kecamatan as $kec)
-                                        <option value="{{ $kec->id }}">{{ $kec->nama_kecamatan }}</option>
+                                        @foreach ($kecamatan as $k)
+                                            <option value="{{ $k->id }}">{{ $k->nama_kecamatan }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -126,7 +126,7 @@
                                 accept="image/*">
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-danger">Simpan</button>
                         </div>
                     </div>
 

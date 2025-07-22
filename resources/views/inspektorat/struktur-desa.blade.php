@@ -29,8 +29,8 @@
                                     <select name="id_kecamatan" id="id_kecamatan" class="form-control" required
                                         onchange="getDesa(this.value)">
                                         <option value="">-- Pilih Kecamatan --</option>
-                                        @foreach ($kecamatan as $kec)
-                                        <option value="{{ $kec->id }}">{{ $kec->nama_kecamatan }}</option>
+                                        @foreach ($kecamatan as $k)
+                                            <option value="{{ $k->id }}">{{ $k->nama_kecamatan }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -126,7 +126,7 @@
                                 accept="image/*">
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-danger">Simpan</button>
                         </div>
                     </div>
 
@@ -173,8 +173,8 @@
                     </td>
                     <td>{{ $item->alamat }}</td>
                      <td>
-                        <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{{ route('struktur-desa.edit', $item->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ route('struktur-desa.destroy', $item->id) }}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
                 @endforeach

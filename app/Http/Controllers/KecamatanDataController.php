@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kecamatan;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class KecamatanDataController extends Controller
 {
@@ -16,10 +18,20 @@ class KecamatanDataController extends Controller
             'alamat_kecamatan' => 'nullable|string',
             'kode_pos'         => 'nullable|string|max:20',
             'telephone'        => 'nullable|string|max:20',
+            'email'            => 'required|email',
+            'password'         => 'required|string|min:6',
         ]);
 
+        $user = User::create([
+            'name' => $validated['nama_kecamatan'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'kecamatan',
+        ]);
+        
         // Simpan ke database
         Kecamatan::create([
+            'user_id'          => $user->id,
             'kode_kecamatan'   => $validated['kode_kecamatan'],
             'nama_kecamatan'   => $validated['nama_kecamatan'],
             'nama_kabupaten'   => 'Probolinggo',

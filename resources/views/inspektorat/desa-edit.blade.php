@@ -70,6 +70,20 @@
                                             value="{{ $desa->telepon }}">
                                     </td>
                                 </tr>
+                                {{-- Email dan PAssword --}}
+                                <tr>
+                                    <td><label for="email">Email :</label></td>
+                                    <td>
+                                        <input type="email" name="email" id="email" class="form-control" required
+                                            value="{{ $desa->user->email }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label for="password">Password :</label></td>
+                                    <td>
+                                        <input type="password" name="password" id="password" class="form-control" placeholder="Kosongkan jika tidak ingin mengubah">
+                                    </td>
+                                </tr>
                             </table>
                             <div class="form-group d-flex justify-content-center align-items-center">
                                 <button type="submit" class="btn btn-primary">Perbarui</button>

@@ -15,4 +15,9 @@ class JenisDokumen extends Model
         'dokumen_rujukan',
         'status',
     ];
+
+    public function pertanyaan()
+    {
+        return $this->belongsToMany(Pertanyaan::class, 'dokumen_pertanyaan', 'dokumen_id', 'pertanyaan_id');
+    }
 }

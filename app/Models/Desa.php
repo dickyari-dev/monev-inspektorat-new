@@ -11,6 +11,7 @@ class Desa extends Model
     protected $table = 'desa';
 
     protected $fillable = [
+        'user_id',
         'kode_desa',
         'nama_desa',
         'kecamatan_id',
@@ -23,5 +24,10 @@ class Desa extends Model
     public function kecamatan()
     {
         return $this->belongsTo(Kecamatan::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

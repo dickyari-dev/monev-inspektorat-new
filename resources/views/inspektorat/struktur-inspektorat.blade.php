@@ -87,7 +87,7 @@
                             <label for="foto">Photo :</label>
                         </td>
                         <td>
-                            <input type="file" name="foto" id="foto" class="form-control" required>
+                            <input type="file" name="foto" id="foto" class="form-control" required accept="image/*">
                         </td>
                     </tr>
                     <tr>
@@ -133,8 +133,8 @@
                     </td>
                     <td>{{ $item->alamat }}</td>
                      <td>
-                        <a href="#" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="#" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{{ route('struktur-inspektorat.edit', $item->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{{ route('struktur-inspektorat.destroy', $item->id) }}" class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
                 @endforeach

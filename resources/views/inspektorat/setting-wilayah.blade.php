@@ -83,6 +83,24 @@
                                                             class="form-control" required>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="email">Email :</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="email" name="email" id="email" class="form-control"
+                                                            required>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="password">Password :</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="password" name="password" id="password"
+                                                            class="form-control" required>
+                                                    </td>
+                                                </tr>
                                             </table>
                                             <div class="form-group d-flex justify-content-center align-items-center">
                                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -193,6 +211,24 @@
                                                             class="form-control" required>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="email">Email :</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="email" name="email" id="email" class="form-control"
+                                                            required>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <label for="password">Password :</label>
+                                                    </td>
+                                                    <td>
+                                                        <input type="password" name="password" id="password"
+                                                            class="form-control" required>
+                                                    </td>
+                                                </tr>
                                             </table>
                                             <div class="form-group d-flex justify-content-center align-items-center">
                                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -228,9 +264,11 @@
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $desa->kode_desa ? $desa->kode_desa : '-' }}</td>
                                             <td>{{ $desa->nama_desa ? $desa->nama_desa : '-' }}</td>
-                                            <td>{{ $desa->kecamatan->nama_kecamatan ? $desa->kecamatan->nama_kecamatan : '-' }}
+                                            <td>{{ $desa->kecamatan->nama_kecamatan ? $desa->kecamatan->nama_kecamatan :
+                                                '-' }}
                                             </td>
-                                            <td>{{ $desa->kecamatan->nama_kabupaten ? $desa->kecamatan->nama_kabupaten : '-' }}
+                                            <td>{{ $desa->kecamatan->nama_kabupaten ? $desa->kecamatan->nama_kabupaten :
+                                                '-' }}
                                             </td>
                                             <td>
                                                 <a href="{{ route('desa.edit', $desa->id) }}"

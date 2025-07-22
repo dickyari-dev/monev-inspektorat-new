@@ -20,56 +20,77 @@
             <h2>Data Jadwal Monitoring Kecamatan</h2>
         </div>
         <div class="card-body">
-            <form action="{{ route('waktu-monev.filter') }}" method="POST" enctype="multipart/form-data }}">
+            <form action="{{ route('waktu-monev.filter') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
-                    <label for="tahun">Kecamatan:</label>
-                    <select name="tahun" id="tahun" class="form-control">
-                        @foreach ($kecamatan as $item)
-                        <option value="{{ $item->id }}">{{ $item->nama_kecamatan }}</option>
+                    <label for="filter_kecamatan">Kecamatan:</label>
+                    <select name="filter_kecamatan" id="filter_kecamatan" class="form-control"
+                        onchange="filterKecamatan()">
+                        <option value="">Semua Kecamatan</option>
+                        @foreach ($kecamatans as $item)
+                        <option value="{{ $item->nama_kecamatan }}">{{ $item->nama_kecamatan }}</option>
                         @endforeach
                     </select>
                 </div>
             </form>
-            <table class="table table-bordered">
+
+            <table class="table table-bordered" id="jadwal-monev-table">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Tahun</th>
+                        <th>Kecamatan</th>
                         <th>Jenis Laporan</th>
                         <th>Tanggal Awal</th>
                         <th>Tanggal Akhir</th>
                         <th>Status</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($waktu_monev as $item)
+                    @php
+                    $bulanList = [
+                    1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
+                    4 => 'April', 5 => 'Mei', 6 => 'Juni',
+                    7 => 'Juli', 8 => 'Agustus', 9 => 'September',
+                    10 => 'Oktober', 11 => 'November', 12 => 'Desember',
+                    ];
+                    @endphp
+
+                    @foreach ($jadwalMonev as $item)
+                    @php
+                    $waktu = $item['waktu_monev'];
+                    @endphp
                     <tr>
                         <td>{{ $loop->iteration }}</td>
-                        @php
-                        $bulanList = [
-                        1 => 'Januari', 2 => 'Februari', 3 => 'Maret',
-                        4 => 'April', 5 => 'Mei', 6 => 'Juni',
-                        7 => 'Juli', 8 => 'Agustus', 9 => 'September',
-                        10 => 'Oktober', 11 => 'November', 12 => 'Desember',
-                        ];
-                        @endphp
-
-                        <td>{{ $bulanList[$item->bulan] ?? '-' }}</td>
-                        <td>{{ $item->tahun }}</td>
-                        <td>{{ $item->kategori->nama_kategori_laporan }} - {{ $item->jenis->nama_jenis_laporan }}</td>
-                        <td>{{ $item->tanggal_awal }}</td>
-                        <td>{{ $item->tanggal_akhir }}</td>
                         <td>
-                            @if ($item->status == 'active')
+                            {{ $bulanList[$waktu->bulan ?? 0] ?? '-' }} - {{ $waktu->tahun ?? '-' }}
+                        </td>
+                        <td>
+                            {{ $item['nama_kecamatan'] ?? '-' }}
+                        </td>
+                        <td>
+                            {{ $waktu->kategori->nama_kategori_laporan ?? '-' }} -
+                            {{ $waktu->jenis->nama_jenis_laporan ?? '-' }}
+                        </td>
+                        <td>{{ $waktu->tanggal_awal ?? '-' }}</td>
+                        <td>{{ $waktu->tanggal_akhir ?? '-' }}</td>
+
+                        <td>
+                            @if (($waktu->status ?? null) === 'active')
                             <span class="text-success">Aktif</span>
                             @else
                             <span class="text-danger">Tidak Aktif</span>
                             @endif
                         </td>
+                        <td>
+                            <a href="{{ route('jadwal-monev.detail', ['waktu' => $item['waktu_monev']->id, 'kecamatan' => $item['kecamatan_id']]) }}"
+                                class="btn btn-sm btn-primary">Detail</a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
+
             </table>
         </div>
     </div>
@@ -103,5 +124,19 @@
             jenisSelect.innerHTML = '<option value="">-- Pilih Jenis Laporan --</option>';
         }
     }
+    function filterKecamatan() {
+        const selectedKecamatan = document.getElementById('filter_kecamatan').value.toLowerCase();
+        const rows = document.querySelectorAll('#jadwal-monev-table tbody tr');
+
+        rows.forEach(row => {
+            const cellKecamatan = row.children[2]?.textContent.trim().toLowerCase(); // kolom ke-3
+            if (!selectedKecamatan || cellKecamatan === selectedKecamatan) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+   
 </script>
 @endsection

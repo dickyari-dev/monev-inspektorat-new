@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Dashboard</title>
 
+
     <!-- Prevent the demo from appearing in search engines -->
     <meta name="robots" content="noindex">
 
@@ -35,6 +36,10 @@
 
     <!-- Vector Maps -->
     <link type="text/css" href="{{ asset('assets/vendor/jqvmap/jqvmap.min.css') }}" rel="stylesheet">
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 </head>
 
@@ -105,17 +110,17 @@
             <div class="mdk-drawer-layout js-mdk-drawer-layout" data-push data-responsive-width="992px">
                 <div class="mdk-drawer-layout__content page">
                     @if(session('success'))
-                    <div class="alert alert-success">
+                    <div class="alert alert-success mt-3">
                         {{ session('success') }}
                     </div>
                     @endif
                     @if(session('error'))
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger mt-3">
                         {{ session('error') }}
                     </div>
                     @endif
                     @if ($errors->any())
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger mt-3">
                         <ul>
                             @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>
@@ -135,7 +140,7 @@
                             <div class="sidebar-heading">Menu</div>
                             <ul class="sidebar-menu">
                                 <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="ui-buttons.html">
+                                    <a class="sidebar-menu-button" href="{{ route('inspektorat.dashboard') }}">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">home</i>
                                         <span class="sidebar-menu-text">Dashboard</span>
                                     </a>
@@ -211,12 +216,14 @@
                                     </a>
                                     <ul class="sidebar-submenu collapse" id="pages_menu">
                                         <li class="sidebar-menu-item">
-                                            <a class="sidebar-menu-button" href="{{ route('inspektorat.waktu-monev') }}">
+                                            <a class="sidebar-menu-button"
+                                                href="{{ route('inspektorat.waktu-monev') }}">
                                                 <span class="sidebar-menu-text">Waktu Monev</span>
                                             </a>
                                         </li>
                                         <li class="sidebar-menu-item">
-                                            <a class="sidebar-menu-button" href="{{ route('inspektorat.jadwal-monev') }}">
+                                            <a class="sidebar-menu-button"
+                                                href="{{ route('inspektorat.jadwal-monev') }}">
                                                 <span class="sidebar-menu-text">Jadwal Monev</span>
                                             </a>
                                         </li>
@@ -231,7 +238,8 @@
                                     </a>
                                     <ul class="sidebar-submenu collapse" id="layouts_menu">
                                         <li class="sidebar-menu-item">
-                                            <a class="sidebar-menu-button" href="#">
+                                            <a class="sidebar-menu-button"
+                                                href="{{ route('inspektorat.monitoring-desa') }}">
                                                 <span class="sidebar-menu-text">Laporan Monev Desa</span>
                                             </a>
                                         </li>
@@ -250,30 +258,32 @@
                             <div class="sidebar-heading">Menu</div>
                             <ul class="sidebar-menu">
                                 <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="ui-buttons.html">
+                                    <a class="sidebar-menu-button" href="{{ route('kecamatan.dashboard') }}">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">home</i>
                                         <span class="sidebar-menu-text">Dashboard</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-menu-item active open">
+                                <li class="sidebar-menu-item">
                                     <a class="sidebar-menu-button" data-toggle="collapse" href="#dashboards_menu">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">dvr</i>
                                         <span class="sidebar-menu-text">Data Master</span>
                                         <span class="ml-auto sidebar-menu-toggle-icon"></span>
                                     </a>
-                                    <ul class="sidebar-submenu collapse show " id="dashboards_menu">
-                                        <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="{{ route('kecamatan.struktur-kecamatan') }}">
+                                    <ul class="sidebar-submenu collapse " id="dashboards_menu">
+                                        <li class="sidebar-menu-item">
+                                            <a class="sidebar-menu-button"
+                                                href="{{ route('kecamatan.struktur-kecamatan') }}">
                                                 <span class="sidebar-menu-text">Struktur Kecamatan</span>
                                             </a>
                                         </li>
-                                        <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="{{ route('kecamatan.struktur-desa') }}">
+                                        <li class="sidebar-menu-item">
+                                            <a class="sidebar-menu-button"
+                                                href="{{ route('kecamatan.struktur-desa') }}">
                                                 <span class="sidebar-menu-text">Struktur Desa</span>
                                             </a>
                                         </li>
-                                        <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="#">
+                                        <li class="sidebar-menu-item">
+                                            <a class="sidebar-menu-button" href="{{ route('kecamatan.data-petugas') }}">
                                                 <span class="sidebar-menu-text">Data Petugas</span>
                                             </a>
                                         </li>
@@ -281,7 +291,7 @@
                                     </ul>
                                 </li>
                                 <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="ui-buttons.html">
+                                    <a class="sidebar-menu-button" href="{{ route('kecamatan.waktu-monev') }}">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">today</i>
                                         <span class="sidebar-menu-text">Jadwal Monev</span>
                                     </a>
@@ -294,7 +304,8 @@
                                     </a>
                                     <ul class="sidebar-submenu collapse" id="layouts_menu">
                                         <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="index.html">
+                                            <a class="sidebar-menu-button"
+                                                href="{{ route('kecamatan.monitoring-desa') }}">
                                                 <span class="sidebar-menu-text">Laporan Monev Desa</span>
                                             </a>
                                         </li>
@@ -313,25 +324,25 @@
                             <div class="sidebar-heading">Menu</div>
                             <ul class="sidebar-menu">
                                 <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="ui-buttons.html">
+                                    <a class="sidebar-menu-button" href="{{ route('desa.dashboard') }}">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">home</i>
                                         <span class="sidebar-menu-text">Dashboard</span>
                                     </a>
                                 </li>
-                                <li class="sidebar-menu-item active open">
+                                <li class="sidebar-menu-item">
                                     <a class="sidebar-menu-button" data-toggle="collapse" href="#dashboards_menu">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">dvr</i>
                                         <span class="sidebar-menu-text">Data Master</span>
                                         <span class="ml-auto sidebar-menu-toggle-icon"></span>
                                     </a>
-                                    <ul class="sidebar-submenu collapse show " id="dashboards_menu">
+                                    <ul class="sidebar-submenu collapse " id="dashboards_menu">
                                         <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="index.html">
+                                            <a class="sidebar-menu-button" href="{{ route('desa.struktur-desa') }}">
                                                 <span class="sidebar-menu-text">Struktur Desa</span>
                                             </a>
                                         </li>
                                         <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="index.html">
+                                            <a class="sidebar-menu-button" href="{{ route('desa.data-petugas') }}">
                                                 <span class="sidebar-menu-text">Data Petugas</span>
                                             </a>
                                         </li>
@@ -339,7 +350,7 @@
                                     </ul>
                                 </li>
                                 <li class="sidebar-menu-item">
-                                    <a class="sidebar-menu-button" href="ui-buttons.html">
+                                    <a class="sidebar-menu-button" href="{{ route('desa.waktu-monev') }}">
                                         <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">today</i>
                                         <span class="sidebar-menu-text">Jadwal Monev</span>
                                     </a>
@@ -352,12 +363,13 @@
                                     </a>
                                     <ul class="sidebar-submenu collapse" id="layouts_menu">
                                         <li class="sidebar-menu-item active">
-                                            <a class="sidebar-menu-button" href="index.html">
+                                            <a class="sidebar-menu-button"
+                                                href="{{ route('desa.monitoring-desa') }}">
                                                 <span class="sidebar-menu-text">Laporan Monev Desa</span>
                                             </a>
                                         </li>
                                         <li class="sidebar-menu-item">
-                                            <a class="sidebar-menu-button" href="fluid-dashboard.html">
+                                            <a class="sidebar-menu-button" href="#">
                                                 <span class="sidebar-menu-text">Grafik Monev</span>
                                             </a>
                                         </li>

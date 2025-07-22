@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\KategoriLaporan;
+use App\Models\Pertanyaan;
 use Illuminate\Http\Request;
 
 class KategoriLaporanController extends Controller
@@ -46,5 +47,9 @@ class KategoriLaporanController extends Controller
         $kategori->status = 'non-active';
         $kategori->save();
         return back()->with('success', 'Kategori laporan berhasil dihapus.');
+    }
+    public function pertanyaan()
+    {
+        return $this->hasMany(Pertanyaan::class, 'kategori_laporan_id');
     }
 }

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Desa;
 use App\Models\Kecamatan;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class DesaDataController extends Controller
 {
@@ -16,9 +18,19 @@ class DesaDataController extends Controller
             'kecamatan' => 'required|exists:kecamatan,id',
             'alamat_desa'       => 'nullable|string',
             'telephone'      => 'nullable|string|max:20',
+            'email'            => 'required|email',
+            'password'         => 'required|string|min:6',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['nama_desa'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => 'desa',
         ]);
 
         Desa::create([
+            'user_id'      => $user->id,
             'kode_desa'    => $validated['kode_desa'],
             'nama_desa'    => $validated['nama_desa'],
             'kecamatan_id' => $validated['kecamatan'],
@@ -26,6 +38,7 @@ class DesaDataController extends Controller
             'telepon'      => $validated['telephone'],
             'status'       => 'active',
         ]);
+
 
         return back()->with('success', 'Data desa berhasil disimpan.');
     }
@@ -49,6 +62,8 @@ class DesaDataController extends Controller
             'kecamatan_id' => 'required|exists:kecamatan,id',
             'alamat_desa'       => 'nullable|string',
             'telephone'      => 'nullable|string|max:20',
+            'email'            => 'required|email',
+            'password'         => 'nullable|string|min:6',
         ]);
 
         $desa->update([
@@ -58,6 +73,18 @@ class DesaDataController extends Controller
             'alamat'       => $validated['alamat_desa'],
             'telepon'      => $validated['telephone'],
         ]);
+
+        // Email
+        $desa->user->update([
+            'name' => $validated['nama_desa'],
+            'email' => $validated['email'],
+        ]);
+
+        if ($validated['password']) {
+            $desa->user->update([
+                'password' => Hash::make($validated['password']),
+            ]);
+        }
 
         return redirect()->route('inspektorat.setting-wilayah')->with('success', 'Data desa berhasil diperbarui.');
     }

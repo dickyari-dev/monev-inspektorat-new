@@ -53,13 +53,15 @@ class StrukturDesaController extends Controller
     public function edit($id)
     {
         $data = StrukturDesa::findOrFail($id);
-        $desa = Desa::all();
-        $kecamatan = Kecamatan::all();
-        $jenisJabatan = JenisJabatan::all();
+        $desa = Desa::where('status', 'active')->get();
+        $kecamatan = Kecamatan::where('status', 'active')->get();
+        $jenisJabatan = JenisJabatan::where('status', 'active')->get();
         if (Auth::user()->role == 'kecamatan') {
             return view('kecamatan.struktur-desa-edit', compact('data', 'desa', 'kecamatan', 'jenisJabatan'));
         } elseif (Auth::user()->role == 'inspektorat') {
             return view('inspektorat.struktur-desa-edit', compact('data', 'desa', 'kecamatan', 'jenisJabatan'));
+        } elseif (Auth::user()->role == 'desa') {
+            return view('desa.struktur-desa-edit', compact('data', 'desa', 'kecamatan', 'jenisJabatan'));
         }
     }
 

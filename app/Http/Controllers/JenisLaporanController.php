@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\JenisLaporan;
 use App\Models\KategoriLaporan;
+use App\Models\Pertanyaan;
 use Illuminate\Http\Request;
 
 class JenisLaporanController extends Controller
@@ -71,4 +72,10 @@ class JenisLaporanController extends Controller
             'data' => $jenis
         ]);
     }
+    public function pertanyaan()
+    {
+        return $this->hasMany(Pertanyaan::class, 'jenis_laporan_id');
+    }
+
+    
 }

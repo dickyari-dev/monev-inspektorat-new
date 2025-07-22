@@ -21,7 +21,8 @@ return new class extends Migration
 
             $table->enum('status_jab', ['kepala', 'petugas']);
             $table->string('status')->default('active');
-
+            $table->string('nip')->nullable();
+            $table->string('photo')->nullable();
             $table->timestamps();
 
             // Foreign keys

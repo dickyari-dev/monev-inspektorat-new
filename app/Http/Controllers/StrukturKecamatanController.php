@@ -59,11 +59,11 @@ class StrukturKecamatanController extends Controller
         $kecamatan = Kecamatan::where('status', 'active')->get();
         $jenisJabatan = JenisJabatan::where('status', 'active')->get();
         if (Auth::user()->role == 'kecamatan') {
-            return view('kecamatan.struktur-kecamatan-edit', compact('item','kecamatan', 'jenisJabatan'));
-        } elseif(Auth::user()->role == 'desa') {
-            return view('desa.struktur-kecamatan-edit', compact('item','kecamatan', 'jenisJabatan'));
-        } else {
-            return view('inspektorat.struktur-kecamatan-edit', compact('item','kecamatan', 'jenisJabatan'));
+            return view('kecamatan.struktur-kecamatan-edit', compact('item', 'kecamatan', 'jenisJabatan'));
+        } elseif (Auth::user()->role == 'desa') {
+            return view('desa.struktur-kecamatan-edit', compact('item', 'kecamatan', 'jenisJabatan'));
+        } elseif (Auth::user()->role == 'inspektorat') {
+            return view('inspektorat.struktur-kecamatan-edit', compact('item', 'kecamatan', 'jenisJabatan'));
         }
     }
 

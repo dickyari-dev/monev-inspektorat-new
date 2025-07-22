@@ -128,9 +128,29 @@
                 </thead>
                 <tbody>
                     @foreach ($waktu_monev as $item)
+                    @php
+                    $namaBulan = [
+                    1 => 'Januari',
+                    2 => 'Februari',
+                    3 => 'Maret',
+                    4 => 'April',
+                    5 => 'Mei',
+                    6 => 'Juni',
+                    7 => 'Juli',
+                    8 => 'Agustus',
+                    9 => 'September',
+                    10 => 'Oktober',
+                    11 => 'November',
+                    12 => 'Desember',
+                    ];
+                    @endphp
+
+                    {{ $namaBulan[$item->bulan] ?? 'Tidak diketahui' }}
+
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $item->tahun }}</td>
+                        <td>{{ $loop->iteration }} </td>
+                        <td>{{ $namaBulan[$item->bulan] ?? 'Tidak diketahui' }}
+                            - {{ $item->tahun }}</td>
                         <td>{{ $item->kategori->nama_kategori_laporan }} - {{ $item->jenis->nama_jenis_laporan }}</td>
                         <td>{{ $item->tanggal_awal }}</td>
                         <td>{{ $item->tanggal_akhir }}</td>
@@ -143,7 +163,8 @@
                         </td>
                         <td>
                             <a href="{{ route('waktu-monev.edit', $item->id) }}" class="btn btn-sm btn-primary">Edit</a>
-                            <a href="{{ route('waktu-monev.destroy', $item->id) }}" class="btn btn-sm btn-danger">Hapus</a>
+                            <a href="{{ route('waktu-monev.destroy', $item->id) }}"
+                                class="btn btn-sm btn-danger">Hapus</a>
                         </td>
                     </tr>
                     @endforeach

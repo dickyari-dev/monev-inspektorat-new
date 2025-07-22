@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\JenisJabatan;
 use App\Models\StrukturInspektorat;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class StrukturInspektoratController extends Controller
@@ -50,14 +51,26 @@ class StrukturInspektoratController extends Controller
     public function show($id)
     {
         $data = StrukturInspektorat::with('jabatan')->findOrFail($id);
-        return view('struktur_inspektorat.show', compact('data'));
+        if (Auth::user()->role == 'inspektorat') {
+            return view('kecamatan.struktur-inspektorat-show', compact('data'));
+        } elseif (Auth::user()->role == 'kecamatan') {
+            return view('kecamatan.struktur-inspektorat-show', compact('data'));
+        } elseif (Auth::user()->role == 'desa') {
+            return view('desa.struktur-inspektorat-show', compact('data'));
+        }
     }
 
     public function edit($id)
     {
         $data = StrukturInspektorat::findOrFail($id);
         $jenisJabatan = JenisJabatan::all();
-        return view('struktur_inspektorat.edit', compact('data', 'jenisJabatan'));
+        if (Auth::user()->role == 'inspektorat') {
+            return view('inspektorat.struktur-inspektorat-edit', compact('data', 'jenisJabatan'));
+        } elseif (Auth::user()->role == 'kecamatan') {
+            return view('kecamatan.struktur-inspektorat-edit', compact('data', 'jenisJabatan'));
+        } elseif (Auth::user()->role == 'desa') {
+            return view('desa.struktur-inspektorat-edit', compact('data', 'jenisJabatan'));
+        }
     }
 
     public function update(Request $request, $id)
@@ -88,8 +101,7 @@ class StrukturInspektoratController extends Controller
         }
 
         $data->update($validated);
-
-        return redirect()->route('struktur-inspektorat.index')->with('success', 'Data berhasil diupdate.');
+        return redirect()->back()->with('success', 'Data berhasil diupdate.');
     }
 
     public function destroy($id)
@@ -98,7 +110,8 @@ class StrukturInspektoratController extends Controller
         if ($data->foto && Storage::disk('public')->exists($data->foto)) {
             Storage::disk('public')->delete($data->foto);
         }
-        $data->delete();
+        $data->status = 'non-active';
+        $data->save();
         return redirect()->back()->with('success', 'Data berhasil dihapus.');
     }
 }
