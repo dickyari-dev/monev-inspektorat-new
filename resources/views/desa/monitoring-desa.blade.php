@@ -23,7 +23,8 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label for="kecamatan_id">Pilih Kecamatan</label>
-                            <select name="kecamatan_id" id="kecamatan_id" class="form-control" onchange="changeKecamatan()">
+                            <select name="kecamatan_id" id="kecamatan_id" class="form-control"
+                                onchange="changeKecamatan()">
                                 <option value="">Pilih kecamatan</option>
                                 @foreach ($kecamatan as $item)
                                 <option value="{{ $item->id }}">{{ $item->nama_kecamatan }}</option>
@@ -106,6 +107,7 @@
                                 <th>No</th>
                                 <th>Nama Dokumen</th>
                                 <th>Dokumen Rujukan</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -122,7 +124,7 @@
 
 @section('scripts')
 <script>
-function changeKecamatan() {
+    function changeKecamatan() {
     const kecamatanId = document.getElementById('kecamatan_id').value;
     const tbody = document.querySelector('table tbody');
 
@@ -418,6 +420,25 @@ function tampilkanDokumen() {
                 <td>${index + 1}</td>
                 <td>${item.nama_dokumen}</td>
                 <td>${item.dokumen_rujukan ?? '-'}</td>
+                            <td class="text-center">
+    ${
+        !item.status 
+            ? `<span class="text-muted">-</span>` 
+            : item.status === 'terima' 
+                ? `<span class="badge bg-success text-white">Di-approve oleh Inspektorat</span>` 
+                : item.status === 'revisi' 
+                    ? `<span class="badge bg-warning text-white">Perlu Revisi</span>` 
+                    : item.status === 'pending' 
+                        ? `<span class="badge bg-secondary text-white">Menunggu Verifikasi Inspektorat</span>` 
+                        : `<span class="badge bg-dark text-white">Status Tidak Dikenal</span>`
+    }
+
+    ${
+        item.keterangan_pengirim 
+            ? `<div class="small text-muted mt-1 fst-italic">"${item.keterangan_pengirim}"</div>` 
+            : ''
+    }
+</td>
                 <td class="text-center">
                     ${item.dokumen 
                         ? `<a href="/storage/${item.dokumen}" target="_blank" title="Lihat dokumen">

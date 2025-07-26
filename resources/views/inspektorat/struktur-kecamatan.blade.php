@@ -115,9 +115,9 @@
                             <input type="file" name="foto" id="foto" class="form-control mt-2" required
                                 accept="image/*">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
+                        </div> --}}
                     </div>
 
                 </div>
@@ -132,43 +132,59 @@
             <h2>Struktur Kecamatan</h2>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
-                <tr>
-                    <th>No</th>
-                    <th>Photo</th>
-                    <th>Nama Pegawai</th>
-                    <th>NIP</th>
-                    <th>Kecamatan</th>
-                    <th>Jabatan</th>
-                    <th>Tahun Menjabat</th>
-                    <th>Alamat Lengkap</th>
-                    <th>Aksi</th>
-                </tr>
-                @foreach ($struktur as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>
-                        <img src="{{ asset('storage/' . $item->foto) }}" alt=""
-                            style="width: 100px; height: 100px; object-fit: cover">
-                    </td>
-                    <td>{{ $item->nama_pegawai ? $item->nama_pegawai : '-' }}</td>
-                    <td>{{ $item->nip ? $item->nip : '-' }}</td>
-                    <td>{{ $item->kecamatan->nama_kecamatan ? $item->kecamatan->nama_kecamatan : '-' }}</td>
-                    <td>{{ $item->jabatan->nama_jabatan ? $item->jabatan->nama_jabatan : '-' }}</td>
-                    <td>
-                        {{ $item->tahun_awal ? \Carbon\Carbon::parse($item->tahun_awal)->format('Y') : '?' }}
-                        -
-                        {{ $item->tahun_akhir ? \Carbon\Carbon::parse($item->tahun_akhir)->format('Y') : '?' }}
-                    </td>
+            <div class="form-group mb-3">
+                <label for="filterKecamatan">Filter Kecamatan:</label>
+                <select id="filterKecamatan" class="form-control" onchange="filterByKecamatan()">
+                    <option value="">-- Semua Kecamatan --</option>
+                    @foreach ($kecamatanFilter as $item)
+                    <option value="{{ $item->nama_kecamatan }}">{{ $item->nama_kecamatan }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-                    <td>{{ $item->alamat ? $item->alamat : '-' }}</td>
-                    <td>
-                        <a href="{{ route('struktur-kecamatan.edit', $item->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="{{ route('struktur-kecamatan.destroy', $item->id) }}" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-                @endforeach
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Photo</th>
+                        <th>Nama Pegawai</th>
+                        <th>NIP</th>
+                        <th>Kecamatan</th>
+                        <th>Jabatan</th>
+                        <th>Tahun Menjabat</th>
+                        <th>Alamat Lengkap</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($struktur as $item)
+                    <tr data-kecamatan="{{ $item->kecamatan->nama_kecamatan }}">
+                        <td>{{ $loop->iteration }}</td>
+                        <td>
+                            <img src="{{ asset('storage/' . $item->foto) }}" alt=""
+                                style="width: 100px; height: 100px; object-fit: cover">
+                        </td>
+                        <td>{{ $item->nama_pegawai ?? '-' }}</td>
+                        <td>{{ $item->nip ?? '-' }}</td>
+                        <td>{{ $item->kecamatan->nama_kecamatan ?? '-' }}</td>
+                        <td>{{ $item->jabatan->nama_jabatan ?? '-' }}</td>
+                        <td>
+                            {{ $item->tahun_awal ? \Carbon\Carbon::parse($item->tahun_awal)->format('Y') : '?' }}
+                            -
+                            {{ $item->tahun_akhir ? \Carbon\Carbon::parse($item->tahun_akhir)->format('Y') : '?' }}
+                        </td>
+                        <td>{{ $item->alamat ?? '-' }}</td>
+                        <td>
+                            <a href="{{ route('struktur-kecamatan.edit', $item->id) }}"
+                                class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{{ route('struktur-kecamatan.destroy', $item->id) }}"
+                                class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
             </table>
+
         </div>
     </div>
 </div>
@@ -191,5 +207,19 @@
             img.src = "{{ asset('assets/images/user.png') }}";
         }
     });
+    function filterByKecamatan() {
+    const filterValue = document.getElementById('filterKecamatan').value.toLowerCase();
+    const rows = document.querySelectorAll('table.table-bordered tbody tr');
+
+    rows.forEach(row => {
+        const kecamatan = row.getAttribute('data-kecamatan').toLowerCase();
+        if (!filterValue || kecamatan.includes(filterValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
 </script>
 @endsection

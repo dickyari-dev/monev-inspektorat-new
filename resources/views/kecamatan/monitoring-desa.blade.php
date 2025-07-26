@@ -119,6 +119,8 @@
                                 <th>No</th>
                                 <th>Nama Dokumen</th>
                                 <th>Dokumen Rujukan</th>
+                                <th>Dokumen Upload</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -364,24 +366,55 @@ function tampilkanDokumen() {
                 const row = document.createElement('tr');
                 row.innerHTML = `
     <td>${index + 1}</td>
-    <td>${item.nama_dokumen}</td>
+    <td>${item.status}</td>
     <td>${item.dokumen_rujukan ?? '-'}</td>
     <td class="text-center">
         ${item.dokumen 
             ? `<a href="/storage/${item.dokumen}" target="_blank" title="Lihat dokumen">
                     <i class="fas fa-file-alt text-success"></i>
                </a>` 
-            : `<i class="fas fa-times text-danger" title="Belum ada dokumen"></i>`}
+            : `<i class="fas fa-times text-danger" title="Belum ada dokumen"></i> Belum Ada Dokumen`}
     </td>
+<td class="text-center">
+    ${
+        !item.status 
+            ? `<span class="text-muted">-</span>` 
+            : item.status === 'terima' 
+                ? `<span class="badge bg-success text-white">Di-approve oleh Inspektorat</span>` 
+                : item.status === 'revisi' 
+                    ? `<span class="badge bg-warning text-white">Perlu Revisi</span>` 
+                    : item.status === 'pending' 
+                        ? `<span class="badge bg-secondary text-white">Menunggu Verifikasi Inspektorat</span>` 
+                        : `<span class="badge bg-dark text-white">Status Tidak Dikenal</span>`
+    }
+
+    ${
+        item.keterangan_pengirim 
+            ? `<div class="small text-muted mt-1 fst-italic">"${item.keterangan_pengirim}"</div>` 
+            : ''
+    }
+</td>
+
+
     <td>
-        <form onsubmit="uploadDokumen(event, ${item.id}, ${desaId})" enctype="multipart/form-data">
-            <input type="file" name="dokumen" class="form-control form-control-sm mb-1" required>
-            <button type="submit" class="btn btn-sm btn-primary">
-                <i class="fas fa-upload"></i> Upload
-            </button>
-        </form>
-    </td>
-`;
+            <form onsubmit="uploadDokumen(event, ${item.id}, ${desaId})" enctype="multipart/form-data">
+                <div class="mb-2">
+                    <label class="form-label form-label-sm">Dokumen</label>
+                    <input 
+                        type="file" 
+                        name="dokumen" 
+                        class="form-control form-control-sm" 
+                        required
+                    >
+                </div>
+               
+                <button type="submit" class="btn btn-sm btn-primary">
+                    <i class="fas fa-upload"></i> Upload
+                </button>
+            </form>
+        </td>
+
+        `;
                 tbody.appendChild(row);
             });
 
@@ -431,11 +464,6 @@ function uploadDokumen(event, jenisDokumenId, desaId) {
         Swal.fire('Gagal', 'Gagal mengupload dokumen', 'error');
     });
 }
-
-
-
-
-
 
 
 </script>

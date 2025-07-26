@@ -30,7 +30,7 @@
                                         onchange="getDesa(this.value)">
                                         <option value="">-- Pilih Kecamatan --</option>
                                         @foreach ($kecamatan as $k)
-                                            <option value="{{ $k->id }}">{{ $k->nama_kecamatan }}</option>
+                                        <option value="{{ $k->id }}">{{ $k->nama_kecamatan }}</option>
                                         @endforeach
                                     </select>
                                 </td>
@@ -125,9 +125,9 @@
                             <input type="file" name="foto" id="foto" class="form-control mt-2" required
                                 accept="image/*">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <button type="submit" class="btn btn-danger">Simpan</button>
-                        </div>
+                        </div> --}}
                     </div>
 
                 </div>
@@ -142,6 +142,29 @@
             <h2>Struktur Desa</h2>
         </div>
         <div class="card-body">
+            <div class="filter">
+                <form action="" method="GET">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label for="filter_kecamatan_id">Kecamatan</label>
+                            <select name="filter_kecamatan_id" id="filter_kecamatan_id" class="form-control"
+                                onchange="getDesaFilter(this.value)">
+                                <option value="">-- Pilih Kecamatan --</option>
+                                @foreach ($kecamatan as $k)
+                                <option value="{{ $k->id }}">{{ $k->nama_kecamatan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="filter_desa_id">Desa</label>
+                            <select name="filter_desa_id" id="filter_desa_id" class="form-control"
+                                onchange="getDataDesa(this.value)">
+                                <option value="">-- Pilih Desa --</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <table class="table table-bordered">
                 <tr>
                     <th>No</th>
@@ -155,7 +178,7 @@
                     <th>Alamat Lengkap</th>
                 </tr>
                 @foreach ($struktur as $item)
-                <tr>
+                <tr data-desa-id="{{ $item->desa->id }}">
                     <td>{{ $loop->iteration }}</td>
                     <td>
                         <img src="{{ asset('storage/' . $item->foto) }}" alt=""
@@ -172,9 +195,10 @@
                         {{ $item->tahun_akhir ? \Carbon\Carbon::parse($item->tahun_akhir)->format('Y') : '?' }}
                     </td>
                     <td>{{ $item->alamat }}</td>
-                     <td>
+                    <td>
                         <a href="{{ route('struktur-desa.edit', $item->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="{{ route('struktur-desa.destroy', $item->id) }}" class="btn btn-danger btn-sm">Delete</a>
+                        <a href="{{ route('struktur-desa.destroy', $item->id) }}"
+                            class="btn btn-danger btn-sm">Delete</a>
                     </td>
                 </tr>
                 @endforeach
@@ -225,5 +249,46 @@
             desaSelect.innerHTML = '<option value="">-- Pilih Desa --</option>';
         }
     }
+    function getDesaFilter(kecamatanId) {
+        const desaSelect = document.getElementById('filter_desa_id');
+
+        desaSelect.innerHTML = '<option value="">Loading...</option>';
+
+        if (kecamatanId) {
+            fetch(`/api/desa-by-kecamatan/${kecamatanId}`)
+                .then(response => response.json())
+                .then(response => {
+                    const desaList = response.data;
+                    desaSelect.innerHTML = '<option value="">-- Pilih Desa --</option>';
+                    desaList.forEach(desa => {
+                        desaSelect.innerHTML += `<option value="${desa.id}">${desa.nama_desa}</option>`;
+                    });
+                })
+                .catch(error => {
+                    console.error('Gagal ambil data desa:', error);
+                    desaSelect.innerHTML = '<option value="">Gagal memuat data</option>';
+                });
+        } else {
+            desaSelect.innerHTML = '<option value="">-- Pilih Desa --</option>';
+        }
+    }
+
+
+
+    function getDataDesa(iddesa) {
+        const rows = document.querySelectorAll('table.table-bordered tbody tr');
+
+        rows.forEach(row => {
+            const rowDesaId = row.getAttribute('data-desa-id');
+
+            // Sembunyikan jika tidak sama, atau tampilkan semua jika kosong
+            if (!iddesa || rowDesaId === iddesa) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
 </script>
 @endsection

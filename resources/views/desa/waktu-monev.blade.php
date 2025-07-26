@@ -167,8 +167,8 @@
                             @endif
                         </td>
                         <td>
-                            {{-- <a href="{{ route('monitoring.detail', ['waktu' => $item->id, 'kecamatan' => $kecamatan->id]) }}"
-                                class="btn btn-sm btn-primary">Detail</a> --}}
+                            <a href="{{ route('desa.monitoring.detail', ['waktu' => $item->id, 'kecamatan' => $kecamatan->id]) }}"
+                                class="btn btn-sm btn-primary">Detail</a>
                         </td>
                     </tr>
                     @endforeach

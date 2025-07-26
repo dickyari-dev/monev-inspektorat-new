@@ -45,6 +45,7 @@ Route::get('/pertanyaan-by-jenis/{jenisId}/{desaId}', [PertanyaanController::cla
 Route::get('/ambil-jenis-dokumen-all/{desaId}', [DokumenJawabanController::class, 'ambilSemua']);
 
 Route::post('/upload-dokumen-jawaban', [DokumenJawabanController::class, 'upload'])->name('upload-dokumen-jawaban');
+Route::post('/upload-dokumen-jawaban-inspektorat', [DokumenJawabanController::class, 'uploadInspektorat'])->name('upload-dokumen-jawaban-inspektorat');
 
 Route::get('/desa-by-kecamatan/{kecamatanId}', [DesaController::class, 'getByKecamatan']);
 

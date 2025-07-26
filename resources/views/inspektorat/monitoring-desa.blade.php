@@ -23,7 +23,8 @@
                     <div class="col-md-6">
                         <div class="form-group mb-3">
                             <label for="kecamatan_id">Pilih Kecamatan</label>
-                            <select name="kecamatan_id" id="kecamatan_id" class="form-control" onchange="changeKecamatan()">
+                            <select name="kecamatan_id" id="kecamatan_id" class="form-control"
+                                onchange="changeKecamatan()">
                                 <option value="">Pilih kecamatan</option>
                                 @foreach ($kecamatan as $item)
                                 <option value="{{ $item->id }}">{{ $item->nama_kecamatan }}</option>
@@ -106,6 +107,8 @@
                                 <th>No</th>
                                 <th>Nama Dokumen</th>
                                 <th>Dokumen Rujukan</th>
+                                <th>File Upload</th>
+                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -122,7 +125,7 @@
 
 @section('scripts')
 <script>
-function changeKecamatan() {
+    function changeKecamatan() {
     const kecamatanId = document.getElementById('kecamatan_id').value;
     const tbody = document.querySelector('table tbody');
 
@@ -425,7 +428,54 @@ function tampilkanDokumen() {
                         </a>` 
                         : `<i class="fas fa-times text-danger" title="Belum ada dokumen"></i>`}
                 </td>
-                
+<td class="text-center">
+    ${
+        !item.status 
+            ? `<span class="text-muted">-</span>` 
+            : item.status === 'terima' 
+                ? `<span class="badge bg-success text-white">Di-approve oleh Inspektorat</span>` 
+                : item.status === 'revisi' 
+                    ? `<span class="badge bg-warning text-white">Perlu Revisi</span>` 
+                    : item.status === 'pending' 
+                        ? `<span class="badge bg-secondary text-white">Menunggu Verifikasi Inspektorat</span>` 
+                        : `<span class="badge bg-dark text-white">Status Tidak Dikenal</span>`
+    }
+
+    ${
+        item.keterangan_pengirim 
+            ? `<div class="small text-muted mt-1 fst-italic">"${item.keterangan_pengirim}"</div>` 
+            : ''
+    }
+</td>
+
+                <td>
+    ${
+        item.dokumen 
+        ? `
+        <form onsubmit="uploadDokumen(event, ${item.id}, ${desaId})">
+            <div class="mb-3">
+                <select name="status" class="form-control form-select-sm" required>
+                    <option value="" disabled selected>Pilih status</option>
+                    <option value="revisi">Perlu Revisi</option>
+                    <option value="terima">Di-approve oleh Inspektorat</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <input 
+                    type="text" 
+                    name="keterangan" 
+                    class="form-control" 
+                    placeholder="Keterangan (opsional)"
+                >
+            </div>
+            <button type="submit" class="btn btn-sm btn-primary w-100">
+                <i class="fas fa-paper-plane me-1"></i> Submit
+            </button>
+        </form>
+        `
+        : `<span class="text-danger"><i class="fas fa-times me-1"></i> Belum ada dokumen</span>`
+    }
+</td>   
                 `;
                 tbody.appendChild(row);
             });
@@ -443,39 +493,46 @@ function uploadDokumen(event, jenisDokumenId, desaId) {
     event.preventDefault();
 
     const form = event.target;
-    const fileInput = form.querySelector('input[name="dokumen"]');
-    const file = fileInput.files[0];
+    const status = form.querySelector('select[name="status"]').value;
+    const keterangan = form.querySelector('input[name="keterangan"]').value;
 
-    if (!file) {
-        alert('Pilih dokumen terlebih dahulu.');
+    if (!status) {
+        alert('Silakan pilih status terlebih dahulu.');
         return;
     }
 
-    const formData = new FormData();
-    formData.append('dokumen', file);
-    formData.append('jenis_dokumen_id', jenisDokumenId);
-    formData.append('desa_id', desaId);
+    const data = {
+        jenis_dokumen_id: jenisDokumenId,
+        desa_id: desaId,
+        status: status,
+        keterangan: keterangan || null
+    };
 
-    fetch('/api/upload-dokumen-jawaban', {
+    fetch('/api/upload-dokumen-jawaban-inspektorat', {
         method: 'POST',
-        body: formData
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
     })
     .then(response => response.json())
     .then(result => {
         Swal.fire({
             icon: 'success',
             title: 'Sukses',
-            text: 'Dokumen berhasil diunggah',
+            text: 'Status berhasil dikirim',
             timer: 1500,
             showConfirmButton: false
         });
-        tampilkanDokumen(); // refresh tabel
+        tampilkanDokumen(); // Refresh tabel atau data
     })
     .catch(error => {
-        console.error('Upload gagal:', error);
-        Swal.fire('Gagal', 'Gagal mengupload dokumen', 'error');
+        console.error('Gagal mengirim:', error);
+        Swal.fire('Gagal', 'Terjadi kesalahan saat mengirim data', 'error');
     });
 }
+
 
 </script>
 @endsection

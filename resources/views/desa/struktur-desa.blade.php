@@ -14,7 +14,7 @@
         </div>
     </div>
 </div>
-{{-- 
+
 <div class="container">
     <div class="card">
         <div class="card-body">
@@ -23,7 +23,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <table class="table table-borderless">
-                            <tr>
+                            {{-- <tr>
                                 <td><label for="kecamatan">Kecamatan :</label></td>
                                 <td>
                                     <select name="id_kecamatan" id="id_kecamatan" class="form-control" required
@@ -34,14 +34,13 @@
                                         @endforeach
                                     </select>
                                 </td>
-                            </tr>
-
+                            </tr> --}}
+                            <input type="text" name="id_kecamatan" id="id_kecamatan" value="{{ $desaAuth->kecamatan_id }}" hidden>
                             <tr>
                                 <td><label for="desa">Desa :</label></td>
                                 <td>
-                                    <select name="id_desa" id="desa_id" class="form-control" required>
-                                        <option value="">-- Pilih Desa --</option>
-                                        
+                                    <select name="id_desa" id="desa_id" class="form-control" required readonly>
+\                                        <option value="{{ $desaAuth->id }}" selected >{{ $desaAuth->nama_desa }}</option>
                                     </select>
                                 </td>
                             </tr>
@@ -135,7 +134,7 @@
             </form>
         </div>
     </div>
-</div> --}}
+</div>
 
 <div class="container-fluid">
     <div class="card">

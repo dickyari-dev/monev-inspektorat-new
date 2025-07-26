@@ -22,9 +22,6 @@ use App\Models\StrukturDesa;
 use Illuminate\Support\Facades\Route;
 
 
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -46,14 +43,14 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/inspektorat/struktur-inspektorat/store', [StrukturInspektoratController::class, 'store'])->name('inspektorat.struktur-inspektorat.store');
 Route::get('/struktur-inspektorat/edit/{id}', [StrukturInspektoratController::class, 'edit'])->name('struktur-inspektorat.edit');
 Route::put('/struktur-inspektorat/update/{id}', [StrukturInspektoratController::class, 'update'])->name('struktur-inspektorat.update');
-Route::get('/struktur-inspektorat/delete/{id}', [StrukturInspektoratController::class, 'store'])->name('struktur-inspektorat.destroy');
+Route::get('/struktur-inspektorat/delete/{id}', [StrukturInspektoratController::class, 'destroy'])->name('struktur-inspektorat.destroy');
 
 
 // Struktur kecamatan
 Route::post('/struktur-kecamatan/store', [StrukturKecamatanController::class, 'store'])->name('struktur-kecamatan.store');
 Route::get('/struktur-kecamatan/edit/{id}', [StrukturKecamatanController::class, 'edit'])->name('struktur-kecamatan.edit');
 Route::put('/struktur-kecamatan/update/{id}', [StrukturKecamatanController::class, 'update'])->name('struktur-kecamatan.update');
-Route::get('/struktur-kecamatan/delete/{id}', [StrukturKecamatanController::class, 'store'])->name('struktur-kecamatan.destroy');
+Route::get('/struktur-kecamatan/delete/{id}', [StrukturKecamatanController::class, 'destroy'])->name('struktur-kecamatan.destroy');
 
 // Struktur Desa
 Route::post('/struktur-desa/store', [StrukturDesaController::class, 'store'])->name('struktur-desa.store');
@@ -147,6 +144,7 @@ Route::group(['middleware' => ['auth.check:inspektorat']], function () {
     Route::get('/inspektorat/jadwal-monev', [InspektoratController::class, 'jadwalMonev'])->name('inspektorat.jadwal-monev');
     Route::get('/inspektorat/jadwal-monev/{waktu}/kecamatan/{kecamatan}', [InspektoratController::class, 'detailJadwal'])->name('jadwal-monev.detail');
     Route::get('/inspektorat/jadwal-monev', [InspektoratController::class, 'jadwalMonev'])->name('inspektorat.jadwal-monev');
+    Route::get('/inspektorat/jadwal-monev/{waktu}/kecamatan/{kecamatan}', [InspektoratController::class, 'monitoringDetail'])->name('inspektorat.monitoring.detail');
 
     // Waktu Monev
     Route::get('/inspektorat/waktu-monev', [InspektoratController::class, 'waktuMonev'])->name('inspektorat.waktu-monev');
@@ -169,7 +167,7 @@ Route::group(['middleware' => ['auth.check:kecamatan']], function () {
 
     Route::get('/kecamatan/waktu-monev', [KecamatanController::class, 'waktuMonev'])->name('kecamatan.waktu-monev');
 
-    Route::get('/inspektorat/jadwal-monev/{waktu}/kecamatan/{kecamatan}', [KecamatanController::class, 'monitoringDetail'])->name('monitoring.detail');
+    Route::get('/kecamatan/jadwal-monev/{waktu}/kecamatan/{kecamatan}', [KecamatanController::class, 'monitoringDetail'])->name('monitoring.detail');
 
     Route::get('/kecamatan/monitoring-desa', [KecamatanController::class, 'monitoringDesa'])->name('kecamatan.monitoring-desa');
 });
@@ -182,4 +180,6 @@ Route::group(['middleware' => ['auth.check:desa']], function () {
 
     Route::get('/desa/waktu-monev', [DesaController::class, 'waktuMonev'])->name('desa.waktu-monev');
     Route::get('/desa/monitoring-desa', [DesaController::class, 'monitoringDesa'])->name('desa.monitoring-desa');
+
+    Route::get('/desa/jadwal-monev/{waktu}/kecamatan/{kecamatan}', [DesaController::class, 'monitoringDetail'])->name('desa.monitoring.detail');
 });

@@ -20,6 +20,9 @@ return new class extends Migration
             $table->unsignedBigInteger('jenis_dokumen_id');
             $table->foreign('jenis_dokumen_id')->references('id')->on('jenis_dokumen')->onDelete('cascade');
             $table->string('dokumen')->nullable();
+            $table->enum('status', ['pending', 'revisi', 'terima'])->default('pending');
+            $table->string('keterangan_pengirim')->nullable();
+            $table->string('keterangan_penerima')->nullable();
             $table->timestamps();
         });
     }

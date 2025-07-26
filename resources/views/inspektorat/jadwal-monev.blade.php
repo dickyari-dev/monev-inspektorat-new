@@ -84,7 +84,7 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('jadwal-monev.detail', ['waktu' => $item['waktu_monev']->id, 'kecamatan' => $item['kecamatan_id']]) }}"
+                            <a href="{{ route('inspektorat.monitoring.detail', ['waktu' => $item['waktu_monev']->id, 'kecamatan' => $item['kecamatan_id']]) }}"
                                 class="btn btn-sm btn-primary">Detail</a>
                         </td>
                     </tr>

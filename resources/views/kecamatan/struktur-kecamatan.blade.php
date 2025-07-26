@@ -30,9 +30,9 @@
                                 <td>
                                     <select name="id_kecamatan" id="id_kecamatan" class="form-control" required>
                                         <option value="">-- Pilih Kecamatan --</option>
-                                        @foreach ($kecamatan as $kecamatan)
-                                        <option value="{{ $kecamatan->id }}">{{ $kecamatan->nama_kecamatan }}</option>
-                                        @endforeach
+                                        <option value="{{ $kecamatan->id }}">{{ $kecamatan->nama_kecamatan
+                                            }}</option>
+
                                     </select>
                                 </td>
                             </tr>
@@ -129,46 +129,53 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-            <h2>Struktur Kecamatan</h2>
+            <h2>Struktur Kecamatan {{ $kecamatan->nama_kecamatan }}</h2>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
-                <tr>
-                    <th>No</th>
-                    <th>Photo</th>
-                    <th>Nama Pegawai</th>
-                    <th>NIP</th>
-                    <th>Kecamatan</th>
-                    <th>Jabatan</th>
-                    <th>Tahun Menjabat</th>
-                    <th>Alamat Lengkap</th>
-                    <th>Aksi</th>
-                </tr>
-                @foreach ($struktur as $item)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>
-                        <img src="{{ asset('storage/' . $item->foto) }}" alt=""
-                            style="width: 100px; height: 100px; object-fit: cover">
-                    </td>
-                    <td>{{ $item->nama_pegawai ? $item->nama_pegawai : '-' }}</td>
-                    <td>{{ $item->nip ? $item->nip : '-' }}</td>
-                    <td>{{ $item->kecamatan->nama_kecamatan ? $item->kecamatan->nama_kecamatan : '-' }}</td>
-                    <td>{{ $item->jabatan->nama_jabatan ? $item->jabatan->nama_jabatan : '-' }}</td>
-                    <td>
-                        {{ $item->tahun_awal ? \Carbon\Carbon::parse($item->tahun_awal)->format('Y') : '?' }}
-                        -
-                        {{ $item->tahun_akhir ? \Carbon\Carbon::parse($item->tahun_akhir)->format('Y') : '?' }}
-                    </td>
 
-                    <td>{{ $item->alamat ? $item->alamat : '-' }}</td>
-                    <td>
-                        <a href="{{ route('struktur-kecamatan.edit', $item->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="{{ route('struktur-kecamatan.destroy', $item->id) }}" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
-                </tr>
-                @endforeach
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Photo</th>
+                        <th>Nama Pegawai</th>
+                        <th>NIP</th>
+                        <th>Kecamatan</th>
+                        <th>Jabatan</th>
+                        <th>Tahun Menjabat</th>
+                        <th>Alamat Lengkap</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($struktur as $item)
+                    <tr data-kecamatan="{{ $item->kecamatan->nama_kecamatan }}">
+                        <td>{{ $loop->iteration }}</td>
+                        <td>
+                            <img src="{{ asset('storage/' . $item->foto) }}" alt=""
+                                style="width: 100px; height: 100px; object-fit: cover">
+                        </td>
+                        <td>{{ $item->nama_pegawai ?? '-' }}</td>
+                        <td>{{ $item->nip ?? '-' }}</td>
+                        <td>{{ $item->kecamatan->nama_kecamatan ?? '-' }}</td>
+                        <td>{{ $item->jabatan->nama_jabatan ?? '-' }}</td>
+                        <td>
+                            {{ $item->tahun_awal ? \Carbon\Carbon::parse($item->tahun_awal)->format('Y') : '?' }}
+                            -
+                            {{ $item->tahun_akhir ? \Carbon\Carbon::parse($item->tahun_akhir)->format('Y') : '?' }}
+                        </td>
+                        <td>{{ $item->alamat ?? '-' }}</td>
+                        <td>
+                            <a href="{{ route('struktur-kecamatan.edit', $item->id) }}"
+                                class="btn btn-primary btn-sm">Edit</a>
+                            <a href="{{ route('struktur-kecamatan.destroy', $item->id) }}"
+                                class="btn btn-danger btn-sm">Delete</a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
             </table>
+
         </div>
     </div>
 </div>
@@ -191,5 +198,19 @@
             img.src = "{{ asset('assets/images/user.png') }}";
         }
     });
+    function filterByKecamatan() {
+    const filterValue = document.getElementById('filterKecamatan').value.toLowerCase();
+    const rows = document.querySelectorAll('table.table-bordered tbody tr');
+
+    rows.forEach(row => {
+        const kecamatan = row.getAttribute('data-kecamatan').toLowerCase();
+        if (!filterValue || kecamatan.includes(filterValue)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
 </script>
 @endsection

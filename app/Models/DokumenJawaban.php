@@ -15,6 +15,9 @@ class DokumenJawaban extends Model
         'desa_id',
         'jenis_dokumen_id',
         'dokumen',
+        'status',
+        'keterangan_pengirim',
+        'keterangan_penerima',
     ];
 
     // Relasi ke jawaban

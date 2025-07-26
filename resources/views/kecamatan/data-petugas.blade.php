@@ -90,9 +90,9 @@
                             <input type="file" name="photo" id="photo" class="form-control mt-2" required
                                 accept="image/*">
                         </div>
-                        <div class="form-group">
+                        {{-- <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </form>
